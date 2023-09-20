@@ -12,7 +12,7 @@
         }
         public abstract string PlanType(string planType);
         public abstract int CountPerson(int countPerson);
-        public abstract double Price(double Price);
+        public abstract double Price(double price);
         public abstract string Resolution(string resolution);
         public abstract string Content(string content);
     }
