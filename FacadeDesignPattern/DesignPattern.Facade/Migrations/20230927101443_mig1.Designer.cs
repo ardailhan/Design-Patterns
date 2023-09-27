@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DesignPattern.Facade.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230927095551_mig3")]
-    partial class mig3
+    [Migration("20230927101443_mig1")]
+    partial class mig1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -71,7 +71,44 @@ namespace DesignPattern.Facade.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("DesignPattern.Facade.DAL.OrderDetail", b =>
+                {
+                    b.Property<int>("OrderDetailId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderDetailId"), 1L, 1);
+
+                    b.Property<int?>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductCount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("ProductPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("ProductTotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("OrderDetailId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderDetails");
                 });
 
             modelBuilder.Entity("DesignPattern.Facade.DAL.Product", b =>
@@ -112,9 +149,42 @@ namespace DesignPattern.Facade.Migrations
                     b.Navigation("Customer");
                 });
 
+            modelBuilder.Entity("DesignPattern.Facade.DAL.OrderDetail", b =>
+                {
+                    b.HasOne("DesignPattern.Facade.DAL.Customer", "Customer")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("CustomerId");
+
+                    b.HasOne("DesignPattern.Facade.DAL.Order", "Order")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("OrderId");
+
+                    b.HasOne("DesignPattern.Facade.DAL.Product", "Product")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("DesignPattern.Facade.DAL.Customer", b =>
                 {
+                    b.Navigation("OrderDetails");
+
                     b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("DesignPattern.Facade.DAL.Order", b =>
+                {
+                    b.Navigation("OrderDetails");
+                });
+
+            modelBuilder.Entity("DesignPattern.Facade.DAL.Product", b =>
+                {
+                    b.Navigation("OrderDetails");
                 });
 #pragma warning restore 612, 618
         }
